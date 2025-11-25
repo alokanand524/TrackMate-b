@@ -1,0 +1,48 @@
+services:
+  - type: web
+    name: trackmate-api
+    env: php
+    buildCommand: |
+      composer install --no-dev --optimize-autoloader
+      php artisan config:cache
+      php artisan route:cache
+      php artisan view:cache
+    startCommand: |
+      php artisan migrate --force
+      php artisan db:seed --class=DefaultDataSeeder --force
+      php -S 0.0.0.0:$PORT -t public
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: false
+      - key: APP_KEY
+        generateValue: true
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: DB_HOST
+        fromDatabase:
+          name: trackmate-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: trackmate-db
+          property: port
+      - key: DB_DATABASE
+        fromDatabase:
+          name: trackmate-db
+          property: database
+      - key: DB_USERNAME
+        fromDatabase:
+          name: trackmate-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: trackmate-db
+          property: password
+
+  - type: pserv
+    name: trackmate-db
+    env: postgresql
+    plan: free
+    databaseName: trackmatedb
