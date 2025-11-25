@@ -1,7 +1,7 @@
 services:
   - type: web
     name: trackmate-api
-    env: php
+    runtime: php
     buildCommand: |
       composer install --no-dev --optimize-autoloader
       php artisan config:cache
@@ -41,7 +41,7 @@ services:
           name: trackmate-db
           property: password
 
-  - type: pserv
-    name: trackmate-db
-    env: postgresql
-    plan: free
+databases:
+  - name: trackmate-db
+    databaseName: trackmatedb
+    user: trackmate
