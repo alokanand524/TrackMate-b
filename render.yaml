@@ -45,4 +45,3 @@ services:
     name: trackmate-db
     env: postgresql
     plan: free
-    databaseName: trackmatedb
